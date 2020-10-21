@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.IStockDao">
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.Stock">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+    <result column="stock_no" jdbcType="INTEGER" property="stockNo" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  
+   <select id="selectAllUser" resultType="com.example.demo.entity.Stock" >
+           select * from stock a
+           where a.id>=#{startIndex,jdbcType=INTEGER} limit #{pageSize,jdbcType=INTEGER}
+   </select>
+   
+   <select id="queryTotalRows" resultType="int">
+        select count(1) from stock
+   </select>
+    
+    
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from stock
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.entity.Stock">
+    insert into stock (id, stock_name, stock_no, 
+      update_time, create_time)
+    values (#{id,jdbcType=BIGINT}, #{stockName,jdbcType=VARCHAR}, #{stockNo,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=BIGINT}, #{createTime,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.entity.Stock">
+    update stock
+    set stock_name = #{stockName,jdbcType=VARCHAR},
+      stock_no = #{stockNo,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, stock_name, stock_no, update_time, create_time
+    from stock
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, stock_name, stock_no, update_time, create_time
+    from stock
+  </select>
+</mapper>
