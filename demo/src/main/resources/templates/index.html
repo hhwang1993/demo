@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+
+<meta charset="UTF-8">
+<title>價格交易表</title>
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+  $(function() {
+    //24-jQuery datepicker 事件 onSelect
+    $("#datepicker").datepicker({
+      //設定日期格式
+      dateFormat : "yy-mm-dd",
+      onSelect : fun1
+    });
+    var array = [ "2016/01/14", "2016/01/15", "2016/01/16" ];
+    //function(String dateText,Object inst)
+    function fun1(dateText, inst) {
+      console.log("onSelect");
+      console.log("dateText",dateText);
+      console.log("inst",inst);
+      $("input[id=datepicker]").val(dateText);  
+      if(array.indexOf(dateText) > -1){
+  $("#showDateBox").append("選中日期......"+dateText);
+      }
+    }
+  });
+  
+  $( document ).ready(function() {
+	  // date-picker
+	  $("input[id=startTime]").val('');
+	  $("input[id=endTime]").val('');
+	  	
+	  // for update(edit)
+		  $( "button[id*='updateButton_']" ).click(function(){
+			  var id = $(this).attr("id").substr(13);         
+			   $( "button[id*='deleteSubmit_']" ).attr("disabled", true);
+			   $( "button[id*='updateButton_']" ).attr("disabled", true);
+			   $( "button[id*='updateSubmit_']" ).attr("disabled", true);
+			   $( "#updateSubmit_"+id ).removeAttr("disabled");
+			   
+			  var quantityUpdate = '<input type="number" style="width: 40px;" min="1"  required  id="quantityUpdateNew" name="quantityUpdate">'
+			  $( "#quantityUpdate_"+id ).html(quantityUpdate);
+			   $('#updateID').val( id );
+		  });
+		  
+		  $( "button[id*='updateSubmit_']" ).click(function(){
+			  	 // ===
+			     if ( ($('#quantityUpdateNew').val()) === undefined ) {
+				     alert( '未修改交易量');
+				     return;
+			     }
+			  	 // == null , 0
+			     if ( ($('#quantityUpdateNew').val()) == 0 ) {
+				     alert( '未修改交易量');
+				     return;
+			     }
+			     $('#updateQuantity').val($('#quantityUpdateNew').val());
+				 $('#updateForm').submit();
+			});
+
+		  //for delete
+			  $(  "button[id*='deleteSubmit_']" ).click(function(){
+					var id = $( this ).parent().parent().children(':first-child').text();			   
+					alert("將刪除排序id：　" + id);
+				   $('#deleteID').val( id );
+				   $('#deleteForm').submit();
+			  });
+		  
+	});
+</script>
+<style>
+   table {
+       background-color: black;
+   }
+   th,td {
+       background-color: white;
+   }
+</style>
+</head>
+
+<body>
+
+<a th:href="@{/price/page}" method="post" class="btn btn-success" >首頁按我</a>&nbsp;
+<a th:href="@{/price/insert}" method="post" class="btn btn-success" >新增按我</a>&nbsp;
+    <hr> 價格交易紀錄表        
+
+    <form id="updateForm" th:action="@{update}" th:method="post" >
+            <input id="updateID" name="updateID" type="hidden"  >
+            <input id="updateQuantity" name="updateQuantity" type="hidden"  >
+    </form>
+    
+    <form id="deleteForm" th:action="@{delete}" th:method="post" >
+            <input id="deleteID" name="deleteID" type="hidden"  >
+    </form>
+    
+	<br>  	  
+	<form method="get" th:action="@{'/price/page'}">  <!--th:action相當於 action-->
+	    股票 id(可選) &nbsp;<input  type="number" placeholder="請輸入數字" name="stockId" th:value="${price.stockId}"><br>
+	  <br> 
+	    股票名稱(可選，模糊查詢) &nbsp;
+	    <input  type="text" pattern="[\u4e00-\u9fa5]*" placeholder="請輸入中文" name="stockName" th:value="${price.stockName}"><br>
+	  <div class="datetest"><p class="datag">
+	      交易日期(可選) &nbsp;<input  id="datepicker"   placeholder="2020-12-18 "   name="tradeTime"></p></div> <br>
+	  <div id="showDateBox"></div>
+	     交易時間區間(可選)
+	     <input type="time" id="startTime" name="startTime" >
+	     <span class="input-group-addon">開始至結束</span>
+	     <input type="time" id="endTime" name="endTime" >  
+		<br>
+	   <input type="submit" value="查詢">
+	</form>
+	<br>
+
+<table id="table" class="table" cellspacing="1">
+    <thead>
+    <tr>
+        <th>排序 id</th>
+        <th>股票 id</th>
+        <th>股票名稱</th>
+        <th>交易日期</th>
+        <th>交易價格</th>
+        <th>交易量</th>
+        <th style="background-color:#FFFF00" >修改交易量</th>
+        <th style="background-color:#FF0000" >刪除</th>
+    </tr>
+    </thead>
+    
+    <tbody th:each="price, index:${pageInfo.list}">
+    <tr>
+        <td th:id = "priceid_+(${price.id})" th:text="${price.id}"></td>
+        <td th:text="${price.stockId}"></td>
+        <td th:text="${price.stockName}"></td>
+        <td th:text="${#dates.format(price.tradeTime, 'yyyy-MM-dd HH:mm:ss' ) }"></td>
+        <td th:text="${price.tradePrice}"></td>
+        <td th:id="quantityUpdate_+${price.id}" th:text="${price.quantity}"></td>
+        <td  id="update" style="background-color:#FFFF00" > 
+        <button th:id="updateButton_+${price.id}" >點我編輯</button>
+        <button th:id="updateSubmit_+${price.id}"  >送出</button>
+        </td>
+        <td  id="delete" >
+        <button th:id="deleteSubmit_+${price.id}" style="background-color:#FF0000" >刪除此筆</button></td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3">
+            當前<span th:text="${pageInfo.pageNum}"></span>頁,
+            共<span th:text="${pageInfo.pages}"></span>頁,
+            共<span th:text="${pageInfo.total}"></span>條記錄
+        </td>
+        <td colspan="4">
+            <a href="/price/page?pageNumber=1">首頁</a>
+            <a th:href="@{'/price/page?pageNumber='+${pageInfo.pageNum - 1}}">上一頁</a>
+            <span th:each="page:${#numbers.sequence(1,pageInfo.pages)}">
+                <a th:href="@{'/price/page?pageNumber='+${page}}" th:text="${page}"></a>
+            </span>
+            <a th:href="@{'/price/page?pageNumber='+${pageInfo.pageNum + 1}}">下一頁</a>
+            <a th:href="@{'/price/page?pageNumber='+${pageInfo.pages}}">尾頁</a>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+
+</body>
+</html>
+

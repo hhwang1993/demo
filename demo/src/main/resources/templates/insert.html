@@ -1,0 +1,42 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="shortcut icon" href="../resources/favicon.ico" th:href="@{/static/favicon.ico}" />
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css}" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<head>
+    <meta charset="UTF-8">
+    <title>insert</title>
+</head>
+<body>
+
+<a th:href="@{/price/page}" method="post" class="btn btn-success" >首頁按我</a>&nbsp;
+<a th:href="@{/price/insert}" method="post" class="btn btn-success" >新增按我</a>&nbsp;
+
+<br><br><br>
+
+    <form th:action="@{/price/insert}" th:method="post" class="w-50 p-3">
+        <div class="form-group">
+            <label for="tradePrice">交易價格</label>
+            <input type="number"  min="1" required class="form-control" id="tradePrice" name="tradePrice" >
+        </div><br>
+        <div class="form-group">
+            <label for="quantity">交易量</label>
+            <input type="number" min="1"  required class="form-control" id="quantity" name="quantity" >
+        </div><br>
+        <div class="form-group">股票名稱
+		<select name="stockId" id="stockId">
+		<option  th:each="price:${pageInfo.list}" th:value="${price.stockId}" 
+		th:selected="${price.stockName==1}" th:text="${price.stockName }"></option>
+		 </select>
+		 </div><br>
+        <button type="submit" class="btn btn-primary">添加</button>
+
+    <br>
+    </form>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script th:src="@{/webjars/jquery/3.5.0/jquery.slim.min.js}" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script th:src="@{/webjars/popper.js/1.14.3/umd/popper.min.js}" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.min.js}" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

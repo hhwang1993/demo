@@ -24,29 +24,29 @@ location="C:/Users/User/.m2/repository/mysql/mysql-connector-java/8.0.13/mysql-c
         </javaTypeResolver>
         <!-- 要產生的model位置，targetProject的值為專案的Source folder，所以是moneynote/src/main/java -->
         <javaModelGenerator
-            targetPackage="com.example.entity"
+            targetPackage="com.example.demo.entity"
             targetProject="demo/src/main/java" />
         <!-- 要產生的MyBatis Mapper位置 --> 
         <sqlMapGenerator 
-        	targetPackage="com.example.mapper"
-            targetProject="demo/src/main/java" />
+        	targetPackage="mybatis"
+            targetProject="demo/src/main/resources" />
         <!-- 要產生的MyBatis Dao位置 -->      
         <javaClientGenerator
-            targetPackage="com.example.dao"
+            targetPackage="com.example.demo.dao"
             targetProject="demo/src/main/java" type="XMLMAPPER" /><!-- MyBatis Mapper設為xml格式 -->
-        <!-- 要生成的資料表 -->
-        <table tableName="stock">
-            <columnOverride column="update_time"
-                javaType="java.lang.Long" jdbcType="BIGINT" /><!-- 因為id為unsigned BIGINT所做的設定 -->
-            <columnOverride column="create_time"
-        		javaType="java.lang.Long" jdbcType="BIGINT" /><!-- 因為id為unsigned BIGINT所做的設定 -->
-        </table>
+<!--         要生成的資料表 -->
+<!--         <table tableName="stock"> -->
+<!--             <columnOverride column="update_time" -->
+<!--                 javaType="java.lang.Long" jdbcType="BIGINT" />因為id為unsigned BIGINT所做的設定 -->
+<!--             <columnOverride column="create_time" -->
+<!--         		javaType="java.lang.Long" jdbcType="BIGINT" />因為id為unsigned BIGINT所做的設定 -->
+<!--         </table> -->
         
-<!--         <table tableName="expense_record"> -->
+        <table tableName="price">
 <!--             <columnOverride column="expense_id" -->
 <!--                 javaType="java.lang.Long" jdbcType="BIGINT" /> -->
 <!--             <columnOverride column="member_id" -->
 <!--                 javaType="java.lang.Long" jdbcType="BIGINT" /> -->
-<!--         </table> -->
+        </table>
     </context>
 </generatorConfiguration>

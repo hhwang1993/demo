@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.IPriceDao">
+  <resultMap id="BaseResultMap" type="com.example.demo.entity.Price">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stock_id" jdbcType="BIGINT" property="stockId" />
+    <result column="trade_time" jdbcType="TIMESTAMP" property="tradeTime" />
+    <result column="trade_price" jdbcType="DECIMAL" property="tradePrice" />
+    <result column="quantity" jdbcType="BIGINT" property="quantity" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+  </resultMap>
+  
+    <select id="selectByParamter" flushCache="true" useCache="false" parameterType="com.example.demo.entity.Price" resultMap="BaseResultMap">
+    select a.id, stock_id,trade_time, trade_price, quantity, a.update_time, a.create_time, b.stock_name, b.stock_no
+    from price a inner join stock  b on a.stock_id=b.id 
+    <where>
+      <if test="stockId !=null and stockId !=0">
+        and a.stock_id = #{stockId}
+      </if>
+      <if test="stockName !=null and stockName !=''">
+           and b.stock_name like CONCAT('%',#{stockName},'%')
+      </if>
+      
+      <if test="tradeTime !=null ">
+		and a.trade_time <![CDATA[ >= timestamp #{tradeTime}  ]]>
+		and a.trade_time <![CDATA[ <=  DATE_ADD( #{tradeTime} , INTERVAL 1 DAY) ]]>
+      </if>
+      
+      <if test="startTime !=null and startTime !=''">
+	  	<if test="tradeTime !=null ">
+			and a.trade_time <![CDATA[ >= DATE_ADD(#{tradeTime},  INTERVAL #{startTime} HOUR_MINUTE) ]]>
+		</if>
+	 	<if test="tradeTime ==null ">
+			and a.trade_time <![CDATA[ >= DATE_ADD( CURDATE(),  INTERVAL #{startTime} HOUR_MINUTE) ]]>
+	 	</if>
+	 </if>
+	 <if test="endTime !=null and endTime !=''">
+	  	<if test="tradeTime !=null ">
+			and a.trade_time <![CDATA[ <= DATE_ADD(#{tradeTime},  INTERVAL #{endTime} HOUR_MINUTE) ]]>
+		</if>
+	 	<if test="tradeTime ==null ">
+			and a.trade_time <![CDATA[ <= DATE_ADD( CURDATE(),   INTERVAL #{endTime} HOUR_MINUTE) ]]>
+	 	</if>
+	 </if>
+    </where>
+    order by id
+  </select>
+  
+   <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.demo.entity.Price" >
+	    insert into price (stock_id,  trade_price, quantity )
+	    values (#{stockId}, #{tradePrice}, #{quantity})
+   </insert>
+  
+   <select id="selectStockNameForTrade" parameterType="java.lang.Long" resultMap="BaseResultMap">
+   	 	select distinct b.stock_name, b.id as stock_id from  stock  b 
+   </select>
+
+   <delete id="delete" parameterType="java.lang.Long">
+   	 	delete from price
+    	where id = #{id,jdbcType=BIGINT}
+   </delete>
+
+   <update id="update" parameterType="com.example.demo.entity.Price">
+    update price
+    set  quantity = #{quantity},
+      update_time = CURDATE()
+    where id = #{id}
+   </update>
+  
+</mapper>

@@ -1,9 +1,11 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Stock  implements Serializable {
-    /**
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2684703762049117313L;
@@ -14,9 +16,9 @@ public class Stock  implements Serializable {
 
     private Integer stockNo;
 
-    private String updateTime;
+    private Date updateTime;
 
-    private String createTime;
+    private Date createTime;
 
     public Long getId() {
         return id;
@@ -42,19 +44,19 @@ public class Stock  implements Serializable {
         this.stockNo = stockNo;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 }

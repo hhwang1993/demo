@@ -5,13 +5,14 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
     <result column="stock_no" jdbcType="INTEGER" property="stockNo" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="BIGINT" property="updateTime" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
   </resultMap>
-  
-   <select id="selectAllUser" resultType="com.example.demo.entity.Stock" >
+
+
+   <select id="selectAllUser" resultType="com.example.demo.entity.Stock">
            select * from stock a
-           where a.id>=#{startIndex,jdbcType=INTEGER} limit #{pageSize,jdbcType=INTEGER}
+           where a.id&gt;=#{startIndex,jdbcType=INTEGER} limit #{pageSize,jdbcType=INTEGER}
    </select>
    
    <select id="queryTotalRows" resultType="int">
@@ -46,4 +47,5 @@
     select id, stock_name, stock_no, update_time, create_time
     from stock
   </select>
+  
 </mapper>
