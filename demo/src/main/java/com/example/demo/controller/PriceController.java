@@ -43,7 +43,6 @@ public class PriceController {
 	 	
 	 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST },
 	 	        produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	    @Transactional
 	 		public ModelAndView insert(Price price, @RequestParam(required=false) String tradePrice,
 	 				@RequestParam(required=false) String quantity,
 	 				@RequestParam(required=false) String stockId ){
@@ -71,7 +70,6 @@ public class PriceController {
 	    }
 
 	 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
-	    @Transactional
 	 	public ModelAndView update(Price price,
 	 			@RequestParam(required=false) String updateID,
 	 			@RequestParam(required=false) String updateQuantity) {
@@ -87,7 +85,6 @@ public class PriceController {
 	 	}
 	 	
 	 	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
-	    @Transactional
 	    public ModelAndView delete(Price price, @RequestParam(required=false) String deleteID) {
 		        try{
 		        	this.priceSerivce.delete(Long.parseLong(deleteID));
